@@ -1,6 +1,6 @@
 using System;
-using AlbumUploader.Models;
-using AlbumUploader.Services;
+using PicHub.AlbumUploader.Models;
+using PicHub.AlbumUploader.Services;
 using Xunit;
 
 namespace AlbumUploader.Tests
@@ -18,13 +18,11 @@ namespace AlbumUploader.Tests
                 TotalBytesUsed = 0
             };
 
-            var svc = new QuotaService();
-
             // XS = 1GB
-            var can = svc.CanUpload(album, 512 * 1024 * 1024); // 512MB
+            var can = QuotaService.CanUpload(album, 512 * 1024 * 1024); // 512MB
             Assert.True(can);
 
-            var cannot = svc.CanUpload(album, 2L * 1024 * 1024 * 1024); // 2GB
+            var cannot = QuotaService.CanUpload(album, 2L * 1024 * 1024 * 1024); // 2GB
             Assert.False(cannot);
         }
     }

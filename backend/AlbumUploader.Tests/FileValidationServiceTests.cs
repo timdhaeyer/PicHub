@@ -1,4 +1,4 @@
-using AlbumUploader.Services;
+using PicHub.AlbumUploader.Services;
 using Xunit;
 
 namespace AlbumUploader.Tests
@@ -13,17 +13,15 @@ namespace AlbumUploader.Tests
         [InlineData("", false)]
         public void ContentTypeValidation_Works(string ct, bool expected)
         {
-            var svc = new FileValidationService();
-            Assert.Equal(expected, svc.IsContentTypeAllowed(ct));
+            Assert.Equal(expected, FileValidationService.IsContentTypeAllowed(ct));
         }
 
         [Fact]
         public void SizeValidation_Works()
         {
-            var svc = new FileValidationService();
             // 10 MB limit
-            Assert.True(svc.IsUnderMaxSize(5 * 1024 * 1024, 10));
-            Assert.False(svc.IsUnderMaxSize(11 * 1024 * 1024, 10));
+            Assert.True(FileValidationService.IsUnderMaxSize(5 * 1024 * 1024, 10));
+            Assert.False(FileValidationService.IsUnderMaxSize(11 * 1024 * 1024, 10));
         }
     }
 }
