@@ -1,0 +1,25 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+      - name: Run frontend lint
+        working-directory: frontend
+        run: npx eslint . --ext .ts,.tsx || true
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.0.x"
+      - name: Build backend
+        run: dotnet build backend/AlbumUploader/AlbumUploader.csproj --configuration Release

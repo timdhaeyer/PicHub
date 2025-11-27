@@ -1,0 +1,21 @@
+{
+    "name": "pichub-frontend",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview --port 4173",
+        "start-server": "node local-dev/server.js",
+        "start-azurite": "npx azurite --silent --location ./azurite --blobPort 10000 --queuePort 10001"
+    },
+    "dependencies": {
+        "@azure/storage-blob": "^12.15.0",
+        "express": "^4.18.2",
+        "multer": "^1.4.5-lts.1"
+    },
+    "devDependencies": {
+        "typescript": "4.9.5",
+        "vite": "4.4.9"
+    }
+}

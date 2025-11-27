@@ -1,0 +1,31 @@
+# Node
+node_modules/
+frontend/node_modules/
+dist/
+build/
+
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Azurite / local dev
+azurite/
+frontend/azurite/
+frontend/local-dev/uploads/
+
+# Logs, OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Secrets
+.env
+.env.*
