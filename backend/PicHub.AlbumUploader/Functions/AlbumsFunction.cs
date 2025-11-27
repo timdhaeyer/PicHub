@@ -1,40 +1,30 @@
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using AlbumUploader.Services;
-using System.Threading.Tasks;
-using System;
+using PicHub.AlbumUploader.Services;
 
-namespace PicHub.AlbumUploader.Functions
+namespace PicHub.AlbumUploader.Functions;
+
+public class AlbumsFunction(IAlbumRepository repo)
 {
-    public static class AlbumsFunction
+    private readonly IAlbumRepository _repo = repo;
+
+    [Function("GetAlbum")]
+    public async Task<HttpResponseData> GetAlbum([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "albums/{publicToken}")] HttpRequestData req, string publicToken)
     {
-        [Function("GetAlbum")]
-        public static async Task<HttpResponseData> GetAlbum([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "albums/{publicToken}")] HttpRequestData req, string publicToken)
+        var resp = req.CreateResponse();
+
+        var album = _repo.GetByPublicToken(publicToken);
+        if (album == null)
         {
-            var sqlConn = Environment.GetEnvironmentVariable("SqlConnectionString");
-            var resp = req.CreateResponse();
-
-            if (string.IsNullOrEmpty(sqlConn))
-            {
-                resp.StatusCode = HttpStatusCode.InternalServerError;
-                await resp.WriteStringAsync("SqlConnectionString not configured");
-                return resp;
-            }
-
-            var repo = new AlbumRepository(sqlConn);
-            var album = repo.GetByPublicToken(publicToken);
-            if (album == null)
-            {
-                resp.StatusCode = HttpStatusCode.NotFound;
-                await resp.WriteStringAsync("Album not found");
-                return resp;
-            }
-
-            resp.StatusCode = HttpStatusCode.OK;
-            resp.Headers.Add("Content-Type", "application/json");
-            await resp.WriteStringAsync($"{{ \"id\": \"{album.Id}\", \"title\": \"{album.Title}\" }}");
+            resp.StatusCode = HttpStatusCode.NotFound;
+            await resp.WriteStringAsync("Album not found");
             return resp;
         }
+
+        resp.StatusCode = HttpStatusCode.OK;
+        resp.Headers.Add("Content-Type", "application/json");
+        await resp.WriteStringAsync($"{{ \"id\": \"{album.Id}\", \"title\": \"{album.Title}\" }}");
+        return resp;
     }
 }

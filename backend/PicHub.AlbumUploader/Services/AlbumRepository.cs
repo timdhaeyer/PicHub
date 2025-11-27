@@ -1,32 +1,25 @@
-using System.Data;
-using Dapper;
-using Microsoft.Data.SqlClient;
-using AlbumUploader.Models;
+using PicHub.AlbumUploader.Data;
+using PicHub.AlbumUploader.Models;
 
-namespace AlbumUploader.Services
+namespace PicHub.AlbumUploader.Services;
+
+public class AlbumRepository(PicHubDbContext db) : IAlbumRepository
 {
-    public class AlbumRepository
+    private readonly PicHubDbContext _db = db;
+
+    public Album? GetByPublicToken(string publicToken)
     {
-        private readonly string _connectionString;
+        return _db.Albums.FirstOrDefault(a => a.PublicToken == publicToken);
+    }
 
-        public AlbumRepository(string connectionString)
+    public void InsertMediaItem(MediaItem item)
+    {
+        _db.MediaItems.Add(item);
+        var album = _db.Albums.Find(item.AlbumId);
+        if (album != null)
         {
-            _connectionString = connectionString;
+            album.TotalBytesUsed = album.TotalBytesUsed + item.SizeBytes;
         }
-
-        private IDbConnection Connection() => new SqlConnection(_connectionString);
-
-        public Album? GetByPublicToken(string publicToken)
-        {
-            using var db = Connection();
-            return db.QueryFirstOrDefault<Album>("SELECT TOP 1 * FROM Albums WHERE PublicToken = @Token", new { Token = publicToken });
-        }
-
-        public void InsertMediaItem(MediaItem item)
-        {
-            using var db = Connection();
-            db.Execute("INSERT INTO MediaItems (Id, AlbumId, Filename, ContentType, SizeBytes, StoragePath, ThumbnailPath, UploadedAt, UploadedBy, IsProcessed) VALUES (@Id,@AlbumId,@Filename,@ContentType,@SizeBytes,@StoragePath,@ThumbnailPath,@UploadedAt,@UploadedBy,@IsProcessed)", item);
-            db.Execute("UPDATE Albums SET TotalBytesUsed = TotalBytesUsed + @Size WHERE Id = @AlbumId", new { Size = item.SizeBytes, AlbumId = item.AlbumId });
-        }
+        _db.SaveChanges();
     }
 }
