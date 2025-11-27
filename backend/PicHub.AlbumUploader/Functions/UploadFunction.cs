@@ -7,6 +7,7 @@ using AlbumUploader.Services;
 using AlbumUploader.Models;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace AlbumUploader.Functions
 {
@@ -57,7 +58,7 @@ namespace AlbumUploader.Functions
                 return resp;
             }
 
-            var boundary = Microsoft.AspNetCore.WebUtilities.MultipartRequestHelper.GetBoundary(parsed, 70);
+            var boundary = MultipartRequestHelper.GetBoundary(parsed, 70);
             var reader = new Microsoft.AspNetCore.WebUtilities.MultipartReader(boundary, req.Body);
             var section = await reader.ReadNextSectionAsync();
             bool uploadedAny = false;
@@ -146,6 +147,27 @@ namespace AlbumUploader.Functions
             resp.StatusCode = HttpStatusCode.Created;
             await resp.WriteStringAsync("{ \"message\": \"Uploaded\" }");
             return resp;
+        }
+    }
+
+    // Add this helper class to your project, e.g., in the same file or a new file.
+    // This is a minimal implementation of MultipartRequestHelper.GetBoundary.
+
+    internal static class MultipartRequestHelper
+    {
+        // Content-Type: multipart/form-data; boundary=---------------------------9051914041544843365972754266
+        public static string GetBoundary(Microsoft.Net.Http.Headers.MediaTypeHeaderValue contentType, int lengthLimit)
+        {
+            var boundary = contentType.Boundary.Value;
+            if (string.IsNullOrWhiteSpace(boundary))
+            {
+                throw new InvalidDataException("Missing content-type boundary.");
+            }
+            if (boundary.Length > lengthLimit)
+            {
+                throw new InvalidDataException($"Multipart boundary length limit {lengthLimit} exceeded.");
+            }
+            return boundary;
         }
     }
 }

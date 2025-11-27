@@ -5,7 +5,7 @@ using AlbumUploader.Services;
 using System.Threading.Tasks;
 using System;
 
-namespace AlbumUploader.Functions
+namespace PicHub.AlbumUploader.Functions
 {
     public static class AlbumsFunction
     {
