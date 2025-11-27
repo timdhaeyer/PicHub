@@ -1,5 +1,33 @@
 name: CI
 
+on:
+  push:
+    branches: [ main, '001-*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      azurite:
+        image: mcr.microsoft.com/azure-storage/azurite
+        ports:
+          - 10000:10000
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+      - name: Run unit tests
+        run: dotnet test --no-build --configuration Release
+name: CI
+
 on: [push, pull_request]
 
 jobs:

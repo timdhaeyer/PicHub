@@ -32,6 +32,24 @@ Notes:
 - The `local-dev/server.js` is a simple Express stub saving uploads to `frontend/local-dev/uploads` and serving them at `/local-uploads`.
 - For full backend integration, configure the frontend to call your Azure Functions endpoints.
 
+Routing notes:
+
+- The admin console is the landing page of the site (open `/` in your browser).
+- Album upload pages are only accessible via a public album link at `/albums/{token}`. The upload UI will not be shown unless a valid token is present in the URL.
+
+Admin auth stub:
+
+- The backend admin endpoints expect a header `X-Admin-Auth` with a token.
+- Default dev token: `dev-secret` (for local testing only — DO NOT USE IN PRODUCTION).
+
+To set a token for the frontend client, store it in `localStorage` before using the admin UI:
+
+```javascript
+localStorage.setItem('ADMIN_AUTH_TOKEN', 'dev-secret');
+```
+
+This will cause the admin create call to include the header automatically.
+
 Local Azurite usage (PowerShell)
 
 ```powershell
