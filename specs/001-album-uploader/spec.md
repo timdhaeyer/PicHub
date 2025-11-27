@@ -66,11 +66,11 @@ As an admin, I can download all the pictures and videos in an album as a single 
 - **FR-002**: Each album MUST expose a unique public, unlisted link (unguessable token) that permits read and upload access for anonymous users (uploads allowed without login) as configured by admin.
 - **FR-003**: Anonymous users (visiting the public link) MUST be able to view thumbnails and stream/download individual media items.
 - **FR-004**: Anonymous users MUST be able to upload photos and videos to an album via the public link, subject to file type and size limits defined by admin/CI defaults (default 50 MB image/video per file).
-- **FR-004a**: Admins MUST be able to select a maximum album size using T-shirt sizing when creating the album: `XS` (up to 1 GB), `S` (up to 5 GB), `M` (up to 10 GB), `L` (up to 50 GB), `XL` (up to 100 GB). The selected size enforces total album storage cap; uploads that would exceed the cap are rejected with clear messaging.
-- **FR-005**: Admins MUST be able to generate and copy the public share link for an album.
-- **FR-006**: Admins MUST be able to download all album assets as a ZIP archive.
-- **FR-007**: Admins MUST be able to delete an album, which removes metadata and prevents further access to the public link.
-- **FR-008**: Users MUST NOT be able to delete media or modify album metadata via the public link.
+- **FR-005**: Admins MUST be able to select a maximum album size using T-shirt sizing when creating the album: `XS` (up to 1 GB), `S` (up to 5 GB), `M` (up to 10 GB), `L` (up to 50 GB), `XL` (up to 100 GB). The selected size enforces total album storage cap; uploads that would exceed the cap are rejected with clear messaging.
+- **FR-006**: Admins MUST be able to generate and copy the public share link for an album.
+- **FR-007**: Admins MUST be able to download all album assets as a ZIP archive.
+- **FR-008**: Admins MUST be able to delete an album, which removes metadata and prevents further access to the public link.
+- **FR-009**: Users MUST NOT be able to delete media or modify album metadata via the public link.
 
 ### Non-Functional Requirements
 

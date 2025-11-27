@@ -83,7 +83,7 @@ Notes: UX Consistency is the only item requiring a short-term mitigation plan (c
 ## Project Structure (selected)
 
 ``text
-backend/ # Azure Functions project (to be created)
+backend/ (actual project: `backend/PicHub.AlbumUploader/`)
 frontend/ # Vite + TypeScript app (already present)
 infra/ # Bicep templates (IaC) - skeleton to be added
 tests/
@@ -97,6 +97,8 @@ specs/001-album-uploader/
 ├─ quickstart.md
 └─ contracts/openapi.yaml
 ```
+
+Note: the repository currently contains `backend/PicHub.AlbumUploader/` as the Functions project. Ensure `tasks.md` uses that path and quickstart/CI scripts reference the same. Also finalize the Target Framework (TFM) decision: project currently targets `net9.0`; if the team intends `.NET 10` update csproj files and local tooling, otherwise update spec to specify `net9.0` as the target. This must be resolved before running `func start` for local testing.
 
 ## Phase 0: Research (this file: `research.md`)
 

@@ -1,7 +1,7 @@
 using PicHub.AlbumUploader.Services;
 using Xunit;
 
-namespace AlbumUploader.Tests
+namespace PicHub.AlbumUploader.Tests
 {
     public class FileValidationServiceTests
     {
