@@ -33,8 +33,7 @@ public class CreateAlbumHandlerTests
             Description: "Desc",
             AllowUploads: false,
             MaxFileSizeMb: 25,
-            AlbumSizeTshirt: "S",
-            RetentionDays: 7
+            AlbumSizeTshirt: "S"
         );
 
         var result = handler.Handle(cmd, default).GetAwaiter().GetResult();

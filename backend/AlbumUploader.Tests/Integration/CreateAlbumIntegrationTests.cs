@@ -28,7 +28,7 @@ public class CreateAlbumIntegrationTests
         var repo = scope.ServiceProvider.GetRequiredService<IAlbumRepository>();
 
         // Simulate CreateAlbumHandler behavior
-        var cmd = new CreateAlbumCommand("Integration Test", "desc", true, 50, "M", 7);
+        var cmd = new CreateAlbumCommand("Integration Test", "desc", true, 50, "M");
         var handler = new PicHub.AlbumUploader.Services.Cqrs.Commands.CreateAlbumHandler(repo);
         var result = handler.Handle(cmd, default).GetAwaiter().GetResult();
 

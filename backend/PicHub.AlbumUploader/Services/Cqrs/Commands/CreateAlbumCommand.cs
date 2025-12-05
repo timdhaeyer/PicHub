@@ -7,8 +7,7 @@ public record CreateAlbumCommand(
     string? Description,
     bool AllowUploads,
     int? MaxFileSizeMb,
-    string? AlbumSizeTshirt,
-    int? RetentionDays
+    string? AlbumSizeTshirt
 ) : IRequest<CreateAlbumResult>;
 
 public record CreateAlbumResult(string PublicToken);

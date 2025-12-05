@@ -75,8 +75,7 @@ public class AlbumsFunction
             body.Description,
             body.AllowUploads,
             body.MaxFileSizeMb,
-            body.AlbumSizeTshirt,
-            body.RetentionDays
+            body.AlbumSizeTshirt
         );
         var result = await _mediator.Send(cmd);
         var token = result.PublicToken ?? string.Empty;
