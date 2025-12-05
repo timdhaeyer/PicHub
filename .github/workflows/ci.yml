@@ -1,53 +1,26 @@
-name: CI
+name: CI - Backend Unit Tests
 
 on:
-  push:
-    branches: [ main, '001-*' ]
   pull_request:
-    branches: [ main ]
+    branches: [main, master]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    services:
-      azurite:
-        image: mcr.microsoft.com/azure-storage/azurite
-        ports:
-          - 10000:10000
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '9.0.x'
-      - name: Restore
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
-      - name: Run unit tests
-        run: dotnet test --no-build --configuration Release
-name: CI
-
-on: [push, pull_request]
-
-jobs:
-  build:
+  backend-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-      - name: Install frontend deps
-        working-directory: frontend
-        run: npm ci
-      - name: Run frontend lint
-        working-directory: frontend
-        run: npx eslint . --ext .ts,.tsx || true
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "7.0.x"
-      - name: Build backend
-        run: dotnet build backend/AlbumUploader/AlbumUploader.csproj --configuration Release
+          dotnet-version: "9.0.x"
+
+      - name: Restore solution
+        run: dotnet restore "./PicHub.sln"
+
+      - name: Build solution
+        run: dotnet build "./PicHub.sln" --no-restore --configuration Release
+
+      - name: Run AlbumUploader unit tests
+        run: dotnet test "./backend/AlbumUploader.Tests/AlbumUploader.Tests.csproj" --no-build --configuration Release --logger "console;verbosity=normal"

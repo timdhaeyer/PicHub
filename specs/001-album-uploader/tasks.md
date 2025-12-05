@@ -60,21 +60,21 @@ Phase: Integration & Verification
 
 11.a Add integration test for public album view and upload (BLOCKING)
 
-   - Test: Create album with `allowUploads=true` → POST an upload to `/api/albums/{token}/media` → GET list/thumbnail endpoint returns the uploaded item.
-   - Ensure uploads are rejected when `allowUploads=false`.
+- Test: Create album with `allowUploads=true` → POST an upload to `/api/albums/{token}/media` → GET list/thumbnail endpoint returns the uploaded item.
+- Ensure uploads are rejected when `allowUploads=false`.
 
 11.b Add integration test for admin ZIP export (BLOCKING)
 
-   - Test: Create album with multiple media items, call admin download endpoint, verify response is a ZIP and contains expected entries. For large sets, test background export triggers.
+- Test: Create album with multiple media items, call admin download endpoint, verify response is a ZIP and contains expected entries. For large sets, test background export triggers.
 
 11.c Add integration test for delete and access control (BLOCKING)
 
-   - Test: Create album → delete album via admin endpoint → GET public album returns 404.
-   - Test: Anonymous request to delete endpoint returns 401/403 (ensure only admin can delete).
+- Test: Create album → delete album via admin endpoint → GET public album returns 404.
+- Test: Anonymous request to delete endpoint returns 401/403 (ensure only admin can delete).
 
 11.d Add contract test for public API responses (BLOCKING)
 
-   - Add a small contract test that validates `POST /api/management/albums` returns `{ publicToken, publicUrl }` and that frontend consumes those fields.
+- Add a small contract test that validates `POST /api/management/albums` returns `{ publicToken, publicUrl }` and that frontend consumes those fields.
 
 12. Verify frontend integration
     - Confirm `frontend/src/pages/admin.ts` sends the new fields in the create POST and that the UI behavior is correct.

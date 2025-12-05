@@ -1,5 +1,5 @@
 using System.Net;
-using Azure.Storage.Blobs;
+using PicHub.AlbumUploader.Services.Storage;
 using MediatR;
 using PicHub.AlbumUploader.Models;
 using Microsoft.Net.Http.Headers;
@@ -9,9 +9,9 @@ namespace PicHub.AlbumUploader.Services.Cqrs.Commands;
 public class ProcessMediaUploadHandler : IRequestHandler<ProcessMediaUploadCommand, ProcessMediaUploadResult>
 {
     private readonly IAlbumRepository _repo;
-    private readonly BlobServiceClient _blobService;
+    private readonly IBlobService _blobService;
 
-    public ProcessMediaUploadHandler(IAlbumRepository repo, BlobServiceClient blobService)
+    public ProcessMediaUploadHandler(IAlbumRepository repo, IBlobService blobService)
     {
         _repo = repo;
         _blobService = blobService;
@@ -36,10 +36,8 @@ public class ProcessMediaUploadHandler : IRequestHandler<ProcessMediaUploadComma
         var uploadedItems = new List<UploadedMediaInfo>();
         var tempFiles = new List<string>();
 
-        var container = _blobService.GetBlobContainerClient(
-            Environment.GetEnvironmentVariable("BLOB_CONTAINER") ?? "pichub-local"
-        );
-        await container.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
+        var containerName = Environment.GetEnvironmentVariable("BLOB_CONTAINER") ?? "pichub-local";
+        await _blobService.CreateContainerIfNotExistsAsync(containerName, cancellationToken);
 
         try
         {
@@ -54,6 +52,7 @@ public class ProcessMediaUploadHandler : IRequestHandler<ProcessMediaUploadComma
 
                 if (hasContentDispositionHeader &&
                     contentDisposition.DispositionType.Equals("form-data") &&
+                    contentDisposition.FileName.HasValue &&
                     !string.IsNullOrEmpty(contentDisposition.FileName.Value))
                 {
                     var fileName = contentDisposition.FileName.Value.Trim('"');
@@ -106,10 +105,9 @@ public class ProcessMediaUploadHandler : IRequestHandler<ProcessMediaUploadComma
 
                     // Upload to blob storage
                     var blobName = $"{album.Id}/{Guid.NewGuid()}_{Path.GetFileName(fileName)}";
-                    var blob = container.GetBlobClient(blobName);
                     using (var fs = File.OpenRead(tmp))
                     {
-                        await blob.UploadAsync(fs, overwrite: true, cancellationToken: cancellationToken);
+                        await _blobService.UploadAsync(containerName, blobName, fs, cancellationToken);
                     }
 
                     // Create media item
@@ -165,7 +163,7 @@ public class ProcessMediaUploadHandler : IRequestHandler<ProcessMediaUploadComma
 
     private static string GetBoundary(MediaTypeHeaderValue contentType, int lengthLimit)
     {
-        var boundary = contentType.Boundary.Value;
+        var boundary = contentType.Boundary.ToString();
         if (string.IsNullOrWhiteSpace(boundary))
         {
             throw new InvalidDataException("Missing content-type boundary.");
