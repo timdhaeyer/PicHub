@@ -31,10 +31,12 @@ namespace PicHub.IntegrationTests
             var container = blobService.GetBlobContainerClient("pichub-integration-test");
             await container.CreateIfNotExistsAsync();
 
-            var testContent = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("hello-pichub-integration"));
-            var blobName = $"test/{Guid.NewGuid()}.txt";
-            var blob = container.GetBlobClient(blobName);
-            await blob.UploadAsync(testContent, overwrite: true);
+            using (var testContent = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("hello-pichub-integration")))
+            {
+                var blobName = $"test/{Guid.NewGuid()}.txt";
+                var blob = container.GetBlobClient(blobName);
+                await blob.UploadAsync(testContent, overwrite: true);
+            }
 
             var exists = await blob.ExistsAsync();
             Assert.True(exists.Value, "Blob should exist after upload");
