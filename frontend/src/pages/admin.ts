@@ -65,7 +65,7 @@ export function renderAdmin(container: HTMLElement) {
       const albumSize = (albumSizeEl.value || 'M')
       payload.albumSizeTshirt = albumSize
 
-      const res = await fetch(`${API_BASE}/api/admin/albums`, {
+      const res = await fetch(`${API_BASE}/api/management/albums`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Admin-Auth': authHeader },
           body: JSON.stringify(payload)
