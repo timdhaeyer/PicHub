@@ -24,8 +24,26 @@
           <img src="./assets/pichub-logo.svg" alt="PicHub" class="brand-logo" />
           <span class="brand-title">PicHub</span>
         </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/gallery" class="nav-link" data-route="/gallery">Gallery</a>
+          <a href="/albums" class="nav-link" data-route="/albums">Upload</a>
+        </nav>
       </div>
     </header>
+    <script>
+      // small helper to mark active nav link based on current path
+      (function() {
+        const links = document.querySelectorAll('.site-nav .nav-link')
+        const path = window.location.pathname || '/'
+        links.forEach(a => {
+          const route = a.getAttribute('data-route') || a.getAttribute('href')
+          if (route && (path === route || path.startsWith(route + '/'))) {
+            a.setAttribute('aria-current', 'page')
+            a.classList.add('active')
+          }
+        })
+      })()
+    </script>
     <main id="main-content" role="main">
       <div id="app"></div>
     </main>
