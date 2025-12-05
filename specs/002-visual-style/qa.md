@@ -21,3 +21,5 @@ Next steps:
 
 - Replace occurrences of `color: var(--pichub-orange)` on light backgrounds with `var(--pichub-dark)` or `var(--pichub-orange-accessible)` where appropriate.
 - Reserve `--pichub-orange` for filled buttons (white text on orange) and small accents.
+## Build artifacts (fallback for Lighthouse)\n\n\nNote: Chrome/Chromium not found on PATH so Lighthouse couldn't run in this environment. To run Lighthouse, install Chrome/Chromium and run 
+px lighthouse http://localhost:4173 --output=json --output-path=./lighthouse-report.json.
