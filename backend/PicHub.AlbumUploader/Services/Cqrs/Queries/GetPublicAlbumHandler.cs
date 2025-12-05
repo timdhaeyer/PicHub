@@ -1,5 +1,6 @@
 using MediatR;
 using PicHub.AlbumUploader.Models;
+using Microsoft.Extensions.Logging;
 
 namespace PicHub.AlbumUploader.Services.Cqrs.Queries;
 
@@ -7,11 +8,13 @@ public class GetPublicAlbumHandler : IRequestHandler<GetPublicAlbumQuery, Public
 {
     private readonly IAlbumRepository _repo;
     private readonly Services.Storage.IBlobService _blobService;
+    private readonly Microsoft.Extensions.Logging.ILogger<GetPublicAlbumHandler> _logger;
 
-    public GetPublicAlbumHandler(IAlbumRepository repo, Services.Storage.IBlobService blobService)
+    public GetPublicAlbumHandler(IAlbumRepository repo, Services.Storage.IBlobService blobService, Microsoft.Extensions.Logging.ILogger<GetPublicAlbumHandler> logger)
     {
         _repo = repo;
         _blobService = blobService;
+        _logger = logger;
     }
 
     public async Task<PublicAlbumDto?> Handle(GetPublicAlbumQuery query, CancellationToken cancellationToken)
@@ -34,11 +37,12 @@ public class GetPublicAlbumHandler : IRequestHandler<GetPublicAlbumQuery, Public
                 var rawPath = (i.StoragePath ?? string.Empty).TrimStart('/');
                 var encoded = Uri.EscapeDataString(rawPath).Replace("%2F", "/");
                 var proxy = $"/api/blobs/{containerName}/{encoded}";
-                Console.WriteLine($"GetPublicAlbumHandler: proxy={proxy}");
+                _logger.LogDebug("GetPublicAlbumHandler: proxy={Proxy}", proxy);
                 uri = new Uri(proxy, UriKind.Relative);
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogWarning(ex, "Failed to construct proxy URI for item {ItemId}", i.Id);
                 uri = null;
             }
 

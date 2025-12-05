@@ -23,6 +23,7 @@ public class CreateAlbumHandlerTests
         public void InsertMediaItem(MediaItem item) => throw new NotImplementedException();
         public IEnumerable<MediaItem> GetMediaItems(Guid albumId) => Array.Empty<MediaItem>();
         public MediaItem? GetMediaItemByStoragePath(string storagePath) => null;
+        public Album? GetById(Guid id) => LastInserted != null && LastInserted.Id == id ? LastInserted : null;
     }
 
     [Fact]

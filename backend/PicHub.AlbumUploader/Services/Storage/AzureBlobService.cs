@@ -20,7 +20,11 @@ public class AzureBlobService : IBlobService
         var container = _client.GetBlobContainerClient(containerName);
         await container.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
 
-        // Ensure container is readable for public blob access (development convenience).
+        // Only enable public blob access and relaxed CORS in non-production/dev environments.
+        // Controlled via environment variable `ENABLE_DEV_BLOB_ACCESS` (set to "1" for dev).
+        var enableDev = string.Equals(Environment.GetEnvironmentVariable("ENABLE_DEV_BLOB_ACCESS"), "1", StringComparison.OrdinalIgnoreCase);
+        if (!enableDev) return;
+
         try
         {
             await container.SetAccessPolicyAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob, cancellationToken: cancellationToken);
@@ -30,7 +34,6 @@ public class AzureBlobService : IBlobService
             // Ignore failures to set access policy (e.g., insufficient permissions in production)
         }
 
-        // Ensure account CORS allows browser access from local dev origin(s).
         try
         {
             var props = await _client.GetPropertiesAsync(cancellationToken: cancellationToken);

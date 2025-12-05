@@ -27,6 +27,11 @@ public class AlbumRepository(PicHubDbContext db) : IAlbumRepository
         return _db.MediaItems.FirstOrDefault(m => m.StoragePath == storagePath);
     }
 
+    public Album? GetById(Guid id)
+    {
+        return _db.Albums.Find(id);
+    }
+
     public void InsertAlbum(Album album)
     {
         _db.Albums.Add(album);

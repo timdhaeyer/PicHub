@@ -14,7 +14,7 @@ namespace PicHub.AlbumUploader.Tests
         {
             var repo = new TestAlbumRepository();
             var blob = new PicHub.AlbumUploader.Services.Storage.InMemoryBlobService();
-            var handler = new PicHub.AlbumUploader.Services.Cqrs.Queries.GetPublicAlbumHandler(repo, blob);
+            var handler = new PicHub.AlbumUploader.Services.Cqrs.Queries.GetPublicAlbumHandler(repo, blob, Microsoft.Extensions.Logging.Abstractions.NullLogger<PicHub.AlbumUploader.Services.Cqrs.Queries.GetPublicAlbumHandler>.Instance);
 
             var result = await handler.Handle(new GetPublicAlbumQuery("no-such"), default);
             Assert.Null(result);
@@ -45,7 +45,7 @@ namespace PicHub.AlbumUploader.Tests
             repo.InsertMediaItem(item);
 
             var blob = new PicHub.AlbumUploader.Services.Storage.InMemoryBlobService();
-            var handler = new PicHub.AlbumUploader.Services.Cqrs.Queries.GetPublicAlbumHandler(repo, blob);
+            var handler = new PicHub.AlbumUploader.Services.Cqrs.Queries.GetPublicAlbumHandler(repo, blob, Microsoft.Extensions.Logging.Abstractions.NullLogger<PicHub.AlbumUploader.Services.Cqrs.Queries.GetPublicAlbumHandler>.Instance);
             var result = await handler.Handle(new GetPublicAlbumQuery("enc-1"), default);
 
             Assert.NotNull(result);

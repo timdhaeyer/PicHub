@@ -46,4 +46,10 @@ public class TestAlbumRepository : IAlbumRepository
     {
         return _media.Values.FirstOrDefault(m => m.StoragePath == storagePath);
     }
+
+    public Album? GetById(Guid id)
+    {
+        _albums.TryGetValue(id, out var a);
+        return a;
+    }
 }

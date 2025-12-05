@@ -2,7 +2,7 @@
 
 This document gathers the common commands to run PicHub locally for development and testing.
 
-Prerequisites
+## Prerequisites
 
 - .NET 9+ SDK
 - Node.js 16+
@@ -26,10 +26,10 @@ $env:AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=http;AccountNam
 
 2. Run the Azure Functions host (backend)
 
-From the workspace root or backend folder:
+From the workspace root or the `backend` folder:
 
 ```powershell
-Set-Location -LiteralPath "C:\GitHub\tim.dhaeyer\PicHub\backend\PicHub.AlbumUploader"
+Set-Location -LiteralPath "./backend/PicHub.AlbumUploader"
 func start --verbose
 ```
 
@@ -61,7 +61,7 @@ npm run start-server
 From the `backend` folder:
 
 ```powershell
-Set-Location -LiteralPath "C:\GitHub\tim.dhaeyer\PicHub\backend"
+Set-Location -LiteralPath "./backend"
 dotnet test .\AlbumUploader.Tests\AlbumUploader.Tests.csproj --nologo --verbosity minimal
 ```
 
@@ -71,7 +71,7 @@ dotnet test .\AlbumUploader.Tests\AlbumUploader.Tests.csproj --nologo --verbosit
 - Start the frontend dev server (step 3) and open the Vite URL (default `http://localhost:5173`)
 - Use the public album upload page (`/albums/{token}`) to test uploads. The frontend will request blob URLs from the Functions host and use the blob proxy to stream content.
 
-Notes and troubleshooting
+## Notes and troubleshooting
 
 - If images fail to load in the browser, ensure the frontend is configured to point at the Functions host (`VITE_API_BASE`) instead of the Vite dev server origin.
 - For CI and production, replace local Azurite endpoints with real Azure Storage connection strings and remove dev-only tokens and CORS relaxations.

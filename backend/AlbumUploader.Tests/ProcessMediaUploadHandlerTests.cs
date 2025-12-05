@@ -29,24 +29,10 @@ public class ProcessMediaUploadHandlerTests
 
         var blob = new InMemoryBlobService();
 
-        // Build a simple multipart body with one file (use CRLF explicitly)
-        var boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
-        var sb = new StringBuilder();
-        sb.Append($"--{boundary}")
-            .Append("\r\n")
-            .Append("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"")
-            .Append("\r\n")
-            .Append("Content-Type: image/png")
-            .Append("\r\n\r\n")
-            .Append("hello world")
-            .Append("\r\n")
-            .Append($"--{boundary}--")
-            .Append("\r\n");
-
-        var bytes = Encoding.UTF8.GetBytes(sb.ToString());
+        var (contentType, bytes) = PicHub.AlbumUploader.Tests.Helpers.TestMultipartBuilder.BuildSingleFile("file", "test.txt", "image/png", "hello world");
         using var ms = new MemoryStream(bytes);
 
-        var cmd = new ProcessMediaUploadCommand(album, ms, $"multipart/form-data; boundary={boundary}");
+        var cmd = new ProcessMediaUploadCommand(album, ms, contentType);
         var handler = new ProcessMediaUploadHandler(repo, blob);
         var result = await handler.Handle(cmd, default);
 

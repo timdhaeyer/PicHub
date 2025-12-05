@@ -37,7 +37,7 @@ public class GetPublicAlbumHandlerTests
         repo.InsertMediaItem(item);
 
         var blob = new PicHub.AlbumUploader.Services.Storage.InMemoryBlobService();
-        var handler = new GetPublicAlbumHandler(repo, blob);
+        var handler = new GetPublicAlbumHandler(repo, blob, Microsoft.Extensions.Logging.Abstractions.NullLogger<GetPublicAlbumHandler>.Instance);
         var result = await handler.Handle(new GetPublicAlbumQuery("public-123"), default);
 
         Assert.NotNull(result);
