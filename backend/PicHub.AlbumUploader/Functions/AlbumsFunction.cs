@@ -70,7 +70,14 @@ public class AlbumsFunction
         }
 
         // Create album via CQRS
-        var cmd = new CreateAlbumCommand(body.Title, body.Description);
+        var cmd = new CreateAlbumCommand(
+            body.Title,
+            body.Description,
+            body.AllowUploads,
+            body.MaxFileSizeMb,
+            body.AlbumSizeTshirt,
+            body.RetentionDays
+        );
         var result = await _mediator.Send(cmd);
         var token = result.PublicToken ?? string.Empty;
 
