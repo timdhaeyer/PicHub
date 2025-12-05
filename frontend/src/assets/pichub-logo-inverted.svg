@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PicHub logo - inverted">
+  <rect width="512" height="512" rx="24" ry="24" fill="#1f1a14" />
+  <g transform="translate(56,72)">
+    <rect fill="#fdecd6" x="0" y="64" width="400" height="272" rx="40" />
+    <rect fill="#fdecd6" x="16" y="32" width="64" height="32" rx="12" />
+    <circle fill="#fdecd6" cx="200" cy="200" r="72" />
+    <circle fill="#1f1a14" cx="200" cy="200" r="42" />
+    <circle fill="#fdecd6" cx="200" cy="200" r="22" />
+  </g>
+</svg>
