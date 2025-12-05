@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using PicHub.AlbumUploader.Models;
 using PicHub.AlbumUploader.Services;
@@ -34,5 +35,10 @@ public class TestAlbumRepository : IAlbumRepository
         {
             a.TotalBytesUsed = a.TotalBytesUsed + item.SizeBytes;
         }
+    }
+
+    public IEnumerable<MediaItem> GetMediaItems(Guid albumId)
+    {
+        return _media.Values.Where(m => m.AlbumId == albumId).ToList();
     }
 }

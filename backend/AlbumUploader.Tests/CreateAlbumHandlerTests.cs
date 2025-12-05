@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using Xunit;
 using PicHub.AlbumUploader.Services.Cqrs.Commands;
 using PicHub.AlbumUploader.Services;
@@ -20,6 +21,7 @@ public class CreateAlbumHandlerTests
         public Album? GetByPublicToken(string publicToken) => null;
         public Album? GetByTitle(string title) => null;
         public void InsertMediaItem(MediaItem item) => throw new NotImplementedException();
+        public IEnumerable<MediaItem> GetMediaItems(Guid albumId) => Array.Empty<MediaItem>();
     }
 
     [Fact]

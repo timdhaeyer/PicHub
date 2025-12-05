@@ -17,6 +17,11 @@ public class AlbumRepository(PicHubDbContext db) : IAlbumRepository
         return _db.Albums.FirstOrDefault(a => a.Title == title);
     }
 
+    public IEnumerable<Models.MediaItem> GetMediaItems(Guid albumId)
+    {
+        return _db.MediaItems.Where(m => m.AlbumId == albumId).ToList();
+    }
+
     public void InsertAlbum(Album album)
     {
         _db.Albums.Add(album);
