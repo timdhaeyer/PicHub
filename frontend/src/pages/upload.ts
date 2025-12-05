@@ -1,4 +1,7 @@
+import { API_BASE } from '../lib/api'
+
 export function renderUpload(container: HTMLElement, token: string) {
+
   container.innerHTML = `
     <main class="center">
       <h1>PicHub - Album Upload</h1>
@@ -28,7 +31,7 @@ export function renderUpload(container: HTMLElement, token: string) {
     }
 
     try {
-      const res = await fetch(`/api/albums/${encodeURIComponent(token)}/media`, { method: 'POST', body: form })
+      const res = await fetch(`${API_BASE}/api/albums/${encodeURIComponent(token)}/media`, { method: 'POST', body: form })
       if (!res.ok) {
         const txt = await res.text()
         status.textContent = `Upload failed: ${txt}`

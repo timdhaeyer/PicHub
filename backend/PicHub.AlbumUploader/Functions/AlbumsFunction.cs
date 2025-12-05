@@ -28,36 +28,36 @@ public class AlbumsFunction
     /// </summary>
     [Function("GetAlbum")]
     public async Task<HttpResponseData> GetAlbum(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/albums/{publicToken}")] 
-        HttpRequestData req, 
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "albums/{publicToken}")]
+        HttpRequestData req,
         string publicToken)
     {
         var album = await _mediator.Send(new GetAlbumQuery(publicToken));
-        
+
         if (album == null)
         {
             return await CreateErrorResponseAsync(req, HttpStatusCode.NotFound, "Album not found");
         }
 
-        return await CreateJsonResponseAsync(req, HttpStatusCode.OK, new 
-        { 
-            id = album.Id, 
-            title = album.Title 
+        return await CreateJsonResponseAsync(req, HttpStatusCode.OK, new
+        {
+            id = album.Id,
+            title = album.Title
         });
     }
 
     /// <summary>
-    /// POST /api/admin/albums - Creates a new album (admin only).
+    /// POST /api/management/albums - Creates a new album (admin only).
     /// </summary>
     [Function("CreateAlbum")]
     public async Task<HttpResponseData> CreateAlbum(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "api/admin/albums")] 
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "management/albums")]
         HttpRequestData req)
     {
         // Authorization check
         if (!_auth.IsAuthorized(req))
         {
-            return await CreateErrorResponseAsync(req, HttpStatusCode.Unauthorized, 
+            return await CreateErrorResponseAsync(req, HttpStatusCode.Unauthorized,
                 "Unauthorized: missing or invalid X-Admin-Auth header");
         }
 
@@ -65,7 +65,7 @@ public class AlbumsFunction
         var body = await req.ReadFromJsonAsync<CreateAlbumRequest>();
         if (body == null || string.IsNullOrWhiteSpace(body.Title))
         {
-            return await CreateErrorResponseAsync(req, HttpStatusCode.BadRequest, 
+            return await CreateErrorResponseAsync(req, HttpStatusCode.BadRequest,
                 "Missing title in request body");
         }
 
@@ -73,14 +73,14 @@ public class AlbumsFunction
         var cmd = new CreateAlbumCommand(body.Title, body.Description);
         var result = await _mediator.Send(cmd);
         var token = result.PublicToken ?? string.Empty;
-        
+
         var publicUrl = $"/api/albums/{token}";
-        var response = await CreateJsonResponseAsync(req, HttpStatusCode.Created, new 
-        { 
-            publicToken = token, 
-            publicUrl 
+        var response = await CreateJsonResponseAsync(req, HttpStatusCode.Created, new
+        {
+            publicToken = token,
+            publicUrl
         });
-        
+
         response.Headers.Add("Location", publicUrl);
         return response;
     }
@@ -90,8 +90,8 @@ public class AlbumsFunction
     /// </summary>
     [Function("UploadMedia")]
     public async Task<HttpResponseData> UploadMedia(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "api/albums/{publicToken}/media")] 
-        HttpRequestData req, 
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "albums/{publicToken}/media")]
+        HttpRequestData req,
         string publicToken)
     {
         // Get album via CQRS query
@@ -103,7 +103,7 @@ public class AlbumsFunction
 
         if (!album.AllowUploads)
         {
-            return await CreateErrorResponseAsync(req, HttpStatusCode.Forbidden, 
+            return await CreateErrorResponseAsync(req, HttpStatusCode.Forbidden,
                 "Uploads are not allowed for this album");
         }
 
@@ -111,13 +111,13 @@ public class AlbumsFunction
         var contentType = GetContentTypeHeader(req);
         if (contentType == null)
         {
-            return await CreateErrorResponseAsync(req, HttpStatusCode.BadRequest, 
+            return await CreateErrorResponseAsync(req, HttpStatusCode.BadRequest,
                 "Content-Type header missing");
         }
 
         if (!contentType.Contains("multipart/form-data", StringComparison.OrdinalIgnoreCase))
         {
-            return await CreateErrorResponseAsync(req, HttpStatusCode.BadRequest, 
+            return await CreateErrorResponseAsync(req, HttpStatusCode.BadRequest,
                 "Content-Type must be multipart/form-data");
         }
 
@@ -127,21 +127,21 @@ public class AlbumsFunction
 
         if (!result.Success)
         {
-            return await CreateErrorResponseAsync(req, 
-                result.ErrorStatusCode ?? HttpStatusCode.BadRequest, 
+            return await CreateErrorResponseAsync(req,
+                result.ErrorStatusCode ?? HttpStatusCode.BadRequest,
                 result.ErrorMessage ?? "Upload failed");
         }
 
         // Build success response
-        var response = await CreateJsonResponseAsync(req, HttpStatusCode.Created, new 
-        { 
-            message = "Uploaded", 
-            items = result.UploadedItems?.Select(i => new 
-            { 
-                id = i.Id, 
-                filename = i.Filename, 
-                size = i.Size, 
-                storagePath = i.StoragePath 
+        var response = await CreateJsonResponseAsync(req, HttpStatusCode.Created, new
+        {
+            message = "Uploaded",
+            items = result.UploadedItems?.Select(i => new
+            {
+                id = i.Id,
+                filename = i.Filename,
+                size = i.Size,
+                storagePath = i.StoragePath
             })
         });
 
@@ -161,8 +161,8 @@ public class AlbumsFunction
     /// Creates an error response with the specified status code and message.
     /// </summary>
     private static async Task<HttpResponseData> CreateErrorResponseAsync(
-        HttpRequestData req, 
-        HttpStatusCode statusCode, 
+        HttpRequestData req,
+        HttpStatusCode statusCode,
         string message)
     {
         var response = req.CreateResponse(statusCode);
@@ -174,8 +174,8 @@ public class AlbumsFunction
     /// Creates a JSON response with the specified status code and data.
     /// </summary>
     private static async Task<HttpResponseData> CreateJsonResponseAsync<T>(
-        HttpRequestData req, 
-        HttpStatusCode statusCode, 
+        HttpRequestData req,
+        HttpStatusCode statusCode,
         T data)
     {
         var response = req.CreateResponse(statusCode);
@@ -188,8 +188,8 @@ public class AlbumsFunction
     /// </summary>
     private static string? GetContentTypeHeader(HttpRequestData req)
     {
-        return req.Headers.TryGetValues("Content-Type", out var values) 
-            ? values.FirstOrDefault() 
+        return req.Headers.TryGetValues("Content-Type", out var values)
+            ? values.FirstOrDefault()
             : null;
     }
 

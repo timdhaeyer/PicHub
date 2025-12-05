@@ -50,6 +50,15 @@ localStorage.setItem('ADMIN_AUTH_TOKEN', 'dev-secret');
 
 This will cause the admin create call to include the header automatically.
 
+If your backend is running on a different host/port than the frontend (common during local development), set the `VITE_API_BASE` environment variable before starting Vite. Example (PowerShell):
+
+```powershell
+$env:VITE_API_BASE = 'http://localhost:7071'
+npm run dev
+```
+
+The frontend will use `VITE_API_BASE` to construct API URLs (defaults to same-origin when not set).
+
 Local Azurite usage (PowerShell)
 
 ```powershell

@@ -1,4 +1,7 @@
+import { API_BASE } from '../lib/api'
+
 export function renderAdmin(container: HTMLElement) {
+
   container.innerHTML = `
     <main class="center">
       <h1>PicHub - Admin</h1>
@@ -29,7 +32,7 @@ export function renderAdmin(container: HTMLElement) {
     status.textContent = 'Creating album...'
     try {
       const authHeader = window.localStorage.getItem('ADMIN_AUTH_TOKEN') || 'dev-secret'
-      const res = await fetch('/api/admin/albums', {
+      const res = await fetch(`${API_BASE}/api/management/albums`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Admin-Auth': authHeader },
           body: JSON.stringify({ title: t })

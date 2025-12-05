@@ -2,7 +2,7 @@
   "profiles": {
     "PicHub.AlbumUploader": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7112",
+      "commandLineArgs": "--port 7071",
       "launchBrowser": false
     }
   }
