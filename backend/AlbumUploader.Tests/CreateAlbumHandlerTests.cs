@@ -22,6 +22,7 @@ public class CreateAlbumHandlerTests
         public Album? GetByTitle(string title) => null;
         public void InsertMediaItem(MediaItem item) => throw new NotImplementedException();
         public IEnumerable<MediaItem> GetMediaItems(Guid albumId) => Array.Empty<MediaItem>();
+        public MediaItem? GetMediaItemByStoragePath(string storagePath) => null;
     }
 
     [Fact]

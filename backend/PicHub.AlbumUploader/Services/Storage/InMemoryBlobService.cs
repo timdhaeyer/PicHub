@@ -38,4 +38,14 @@ public class InMemoryBlobService : IBlobService
         var uri = new Uri($"inmemory://{containerName}/{blobName}");
         return Task.FromResult(uri);
     }
+
+    public Task<Stream> OpenReadAsync(string containerName, string blobName, CancellationToken cancellationToken = default)
+    {
+        if (_store.TryGetValue(Key(containerName, blobName), out var data))
+        {
+            var ms = new MemoryStream(data);
+            return Task.FromResult<Stream>(ms);
+        }
+        throw new FileNotFoundException();
+    }
 }

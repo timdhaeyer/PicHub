@@ -54,7 +54,8 @@ public class AlbumsFunction
                 size = i.SizeBytes,
                 contentType = i.ContentType,
                 storagePath = i.StoragePath,
-                uploadedAt = i.UploadedAt
+                uploadedAt = i.UploadedAt,
+                blobUri = i.BlobUri?.ToString()
             })
         });
     }

@@ -41,4 +41,9 @@ public class TestAlbumRepository : IAlbumRepository
     {
         return _media.Values.Where(m => m.AlbumId == albumId).ToList();
     }
+
+    public MediaItem? GetMediaItemByStoragePath(string storagePath)
+    {
+        return _media.Values.FirstOrDefault(m => m.StoragePath == storagePath);
+    }
 }

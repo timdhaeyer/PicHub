@@ -6,14 +6,53 @@ namespace PicHub.AlbumUploader.Services.Cqrs.Queries;
 public class GetPublicAlbumHandler : IRequestHandler<GetPublicAlbumQuery, PublicAlbumDto?>
 {
     private readonly IAlbumRepository _repo;
-    public GetPublicAlbumHandler(IAlbumRepository repo) => _repo = repo;
+    private readonly Services.Storage.IBlobService _blobService;
 
-    public Task<PublicAlbumDto?> Handle(GetPublicAlbumQuery query, CancellationToken cancellationToken)
+    public GetPublicAlbumHandler(IAlbumRepository repo, Services.Storage.IBlobService blobService)
+    {
+        _repo = repo;
+        _blobService = blobService;
+    }
+
+    public async Task<PublicAlbumDto?> Handle(GetPublicAlbumQuery query, CancellationToken cancellationToken)
     {
         var album = _repo.GetByPublicToken(query.PublicToken);
-        if (album == null) return Task.FromResult<PublicAlbumDto?>(null);
+        if (album == null) return null;
 
         var items = _repo.GetMediaItems(album.Id);
+
+        var itemDtos = new List<Models.MediaItemDto>();
+        var containerName = Environment.GetEnvironmentVariable("BLOB_CONTAINER") ?? "pichub-local";
+
+        foreach (var i in items)
+        {
+            Uri? uri = null;
+            try
+            {
+                // Prefer a same-origin proxy URL so browsers can fetch without CORS issues
+                // Safely encode path segments but preserve slashes
+                var rawPath = (i.StoragePath ?? string.Empty).TrimStart('/');
+                var encoded = Uri.EscapeDataString(rawPath).Replace("%2F", "/");
+                var proxy = $"/api/blobs/{containerName}/{encoded}";
+                Console.WriteLine($"GetPublicAlbumHandler: proxy={proxy}");
+                uri = new Uri(proxy, UriKind.Relative);
+            }
+            catch
+            {
+                uri = null;
+            }
+
+            itemDtos.Add(new Models.MediaItemDto
+            {
+                Id = i.Id,
+                Filename = i.Filename,
+                SizeBytes = i.SizeBytes,
+                ContentType = i.ContentType,
+                StoragePath = i.StoragePath,
+                UploadedAt = i.UploadedAt,
+                BlobUri = uri
+            });
+        }
 
         var dto = new PublicAlbumDto
         {
@@ -23,9 +62,9 @@ public class GetPublicAlbumHandler : IRequestHandler<GetPublicAlbumQuery, Public
             AllowUploads = album.AllowUploads,
             MaxFileSizeMb = album.MaxFileSizeMb,
             AlbumSizeTshirt = album.AlbumSizeTshirt,
-            Items = items
+            Items = itemDtos
         };
 
-        return Task.FromResult<PublicAlbumDto?>(dto);
+        return dto;
     }
 }

@@ -5,11 +5,14 @@
 //  - window.__VITE_API_BASE__ (temp global you can set from console)
 //  - localStorage.VITE_API_BASE (persisted per-browser)
 const staticBase = (import.meta.env.VITE_API_BASE as string) || ''
+// If we're running the Vite dev server and no API base is configured,
+// default to the Functions host used in local development.
+const defaultDevApi = import.meta.env.DEV ? 'http://localhost:7071' : ''
 const runtimeGlobal = typeof window !== 'undefined' ? (window as any).__VITE_API_BASE__ : undefined
 const runtimeLocal = typeof window !== 'undefined' ? window.localStorage.getItem('VITE_API_BASE') : null
 
 // Prefer runtime overrides (global/localStorage) so you can switch target during debugging
-export const API_BASE = runtimeGlobal || runtimeLocal || staticBase || ''
+export const API_BASE = runtimeGlobal || runtimeLocal || staticBase || defaultDevApi || ''
 
 if (!API_BASE) {
     // Helpful debug output for developers seeing same-origin requests

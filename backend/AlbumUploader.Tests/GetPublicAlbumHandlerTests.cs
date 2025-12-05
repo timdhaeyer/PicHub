@@ -36,7 +36,8 @@ public class GetPublicAlbumHandlerTests
         };
         repo.InsertMediaItem(item);
 
-        var handler = new GetPublicAlbumHandler(repo);
+        var blob = new PicHub.AlbumUploader.Services.Storage.InMemoryBlobService();
+        var handler = new GetPublicAlbumHandler(repo, blob);
         var result = await handler.Handle(new GetPublicAlbumQuery("public-123"), default);
 
         Assert.NotNull(result);
@@ -44,5 +45,6 @@ public class GetPublicAlbumHandlerTests
         Assert.Single(result.Items);
         var returned = result.Items.First();
         Assert.Equal(item.Id, returned.Id);
+        Assert.NotNull(returned.BlobUri);
     }
 }
