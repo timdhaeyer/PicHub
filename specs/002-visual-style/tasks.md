@@ -16,6 +16,7 @@ Phase 3: Implementation - Header
 - [ ] T006 [US1] Add header HTML markup to `frontend/src/index.html` including logo image at `src/assets/pichub-logo.svg` and site title
 - [x] T006 [US1] Add header HTML markup to `frontend/src/index.html` including logo image at `src/assets/pichub-logo.svg` and site title
 - [ ] T007 [US1] Add responsive header CSS to `frontend/src/styles.css` to support mobile and desktop layouts
+- [x] T007 [US1] Add responsive header CSS to `frontend/src/styles.css` to support mobile and desktop layouts
 - [ ] T008 [US1] Replace hard-coded colors in `frontend/src/pages` files with CSS variables defined in `frontend/src/styles.css` (update files under `frontend/src/pages/`)
 
 Phase 4: Assets
