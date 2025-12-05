@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: PicHub Album Uploader API
+  version: 1.0.0
+  description: Public and admin endpoints for album upload and management
+servers:
+  - url: /api
+paths:
+  /admin/albums:
+    post:
+      summary: Create a new album (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                albumSizeTshirt:
+                  type: string
+                  enum: [XS, S, M, L, XL]
+                retentionDays:
+                  type: integer
+      responses:
+        "201":
+          description: Album created
+  /admin/albums/{albumId}:
+    delete:
+      summary: Delete an album (admin)
+      parameters:
+        - in: path
+          name: albumId
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Album deleted
+  /admin/albums/{albumId}/download:
+    get:
+      summary: Download album as ZIP (admin)
+      parameters:
+        - in: path
+          name: albumId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ZIP file stream
+  /albums/{publicToken}:
+    get:
+      summary: Get album metadata and list media (public)
+      parameters:
+        - in: path
+          name: publicToken
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Album metadata
+    post:
+      summary: Upload a media item to album (public)
+      parameters:
+        - in: path
+          name: publicToken
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Media uploaded
+  /albums/{publicToken}/media/{mediaId}:
+    get:
+      summary: Get media item (public)
+      parameters:
+        - in: path
+          name: publicToken
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: mediaId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Media stream or redirect to signed URL
+components: {}

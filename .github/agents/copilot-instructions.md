@@ -1,6 +1,6 @@
 # PicHub Development Guidelines
 
-Auto-generated from all feature plans. Last updated: [DATE]
+Auto-generated from all feature plans. Last updated: 2025-11-27
 
 ## Active Technologies
 
@@ -14,7 +14,9 @@ Auto-generated from all feature plans. Last updated: [DATE]
 ## Project Structure
 
 ```text
-[ACTUAL STRUCTURE FROM PLANS]
+backend/
+frontend/
+tests/
 ```
 
 ## Commands (common)
@@ -34,7 +36,7 @@ Auto-generated from all feature plans. Last updated: [DATE]
 
 ## Recent Changes
 
-[LAST 3 FEATURES AND WHAT THEY ADDED]
+- 001-album-uploader: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

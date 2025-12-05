@@ -1,0 +1,35 @@
+-- Migration: 001_create_albums_and_mediaitems.sql
+-- Creates Albums and MediaItems tables for initial schema
+
+CREATE TABLE IF NOT EXISTS Albums (
+  Id UNIQUEIDENTIFIER PRIMARY KEY,
+  Title NVARCHAR(256) NOT NULL,
+  Description NVARCHAR(1024) NULL,
+  CreatedBy UNIQUEIDENTIFIER NULL,
+  CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+  PublicToken NVARCHAR(128) NOT NULL,
+  AllowUploads BIT NOT NULL DEFAULT 1,
+  MaxFileSizeMB INT NOT NULL DEFAULT 50,
+  AlbumSizeTshirt NVARCHAR(8) NOT NULL DEFAULT 'M',
+  TotalBytesUsed BIGINT NOT NULL DEFAULT 0,
+  RetentionDays INT NOT NULL DEFAULT 30,
+  ExpiresAt DATETIME2 NULL
+);
+
+CREATE INDEX IDX_Albums_PublicToken ON Albums (PublicToken);
+
+CREATE TABLE IF NOT EXISTS MediaItems (
+  Id UNIQUEIDENTIFIER PRIMARY KEY,
+  AlbumId UNIQUEIDENTIFIER NOT NULL,
+  Filename NVARCHAR(512) NOT NULL,
+  ContentType NVARCHAR(128) NOT NULL,
+  SizeBytes BIGINT NOT NULL,
+  StoragePath NVARCHAR(1024) NOT NULL,
+  ThumbnailPath NVARCHAR(1024) NULL,
+  UploadedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+  UploadedBy UNIQUEIDENTIFIER NULL,
+  IsProcessed BIT NOT NULL DEFAULT 0,
+  CONSTRAINT FK_MediaItems_Albums FOREIGN KEY (AlbumId) REFERENCES Albums(Id) ON DELETE CASCADE
+);
+
+CREATE INDEX IDX_MediaItems_AlbumId ON MediaItems (AlbumId);
