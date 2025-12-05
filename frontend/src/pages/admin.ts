@@ -8,6 +8,23 @@ export function renderAdmin(container: HTMLElement) {
       <p>Welcome to the admin console. Create an album to get a shareable upload link.</p>
       <div id="admin">
         <input id="title" placeholder="Album title" />
+        <input id="description" placeholder="Description (optional)" />
+        <label>
+          <input id="allow-uploads" type="checkbox" checked /> Allow uploads
+        </label>
+        <label>
+          Max file size (MB, optional): <input id="max-file-size" type="number" min="1" />
+        </label>
+        <label>
+          Album size: 
+          <select id="album-size">
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M" selected>M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </label>
         <button id="create">Create Album</button>
         <div id="admin-status"></div>
         <div id="links"></div>
@@ -18,6 +35,10 @@ export function renderAdmin(container: HTMLElement) {
   `
 
   const title = document.getElementById('title') as HTMLInputElement
+  const description = document.getElementById('description') as HTMLInputElement
+  const allowUploadsEl = document.getElementById('allow-uploads') as HTMLInputElement
+  const maxFileSizeEl = document.getElementById('max-file-size') as HTMLInputElement
+  const albumSizeEl = document.getElementById('album-size') as HTMLSelectElement
   const createBtn = document.getElementById('create') as HTMLButtonElement
   const status = document.getElementById('admin-status')!
   const links = document.getElementById('links')!
@@ -32,10 +53,22 @@ export function renderAdmin(container: HTMLElement) {
     status.textContent = 'Creating album...'
     try {
       const authHeader = window.localStorage.getItem('ADMIN_AUTH_TOKEN') || 'dev-secret'
-      const res = await fetch(`${API_BASE}/api/management/albums`, {
+
+      const payload: any = {
+        title: t,
+        description: (description.value || '').trim(),
+        allowUploads: !!allowUploadsEl.checked,
+      }
+
+      const maxSizeVal = parseInt(maxFileSizeEl.value || '', 10)
+      if (!Number.isNaN(maxSizeVal) && maxSizeVal > 0) payload.maxFileSizeMb = maxSizeVal
+      const albumSize = (albumSizeEl.value || 'M')
+      payload.albumSizeTshirt = albumSize
+
+      const res = await fetch(`${API_BASE}/api/admin/albums`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Admin-Auth': authHeader },
-          body: JSON.stringify({ title: t })
+          body: JSON.stringify(payload)
         })
 
       if (!res.ok) {
