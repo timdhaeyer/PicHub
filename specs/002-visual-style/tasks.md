@@ -2,7 +2,7 @@
 
 Phase 1: Setup
 
-- [ ] T001 Add `frontend/src/assets/pichub-logo.svg` and confirm `index.html` references `src/assets/pichub-logo.svg`
+- [x] T001 Add `frontend/src/assets/pichub-logo.svg` and confirm `index.html` references `src/assets/pichub-logo.svg`
 - [ ] T002 Add `frontend/public/favicon.ico` and sample PNGs at `frontend/public/favicon-32.png` and `frontend/public/favicon-16.png` and link them in `frontend/src/index.html`
 
 Phase 2: Foundational
