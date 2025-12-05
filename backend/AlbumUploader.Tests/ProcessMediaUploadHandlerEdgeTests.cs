@@ -74,12 +74,16 @@ namespace PicHub.AlbumUploader.Tests
 
             var boundary = "----BoundaryCT";
             var sb = new StringBuilder();
-            sb.AppendLine($"--{boundary}");
-            sb.AppendLine("Content-Disposition: form-data; name=\"file\"; filename=\"malware.bin\"");
-            sb.AppendLine("Content-Type: application/x-msdownload");
-            sb.AppendLine();
-            sb.AppendLine("not an image");
-            sb.AppendLine($"--{boundary}--");
+            sb.Append($"--{boundary}")
+                .Append("\r\n")
+                .Append("Content-Disposition: form-data; name=\"file\"; filename=\"malware.bin\"")
+                .Append("\r\n")
+                .Append("Content-Type: application/x-msdownload")
+                .Append("\r\n\r\n")
+                .Append("not an image")
+                .Append("\r\n")
+                .Append($"--{boundary}--")
+                .Append("\r\n");
 
             var bytes = Encoding.UTF8.GetBytes(sb.ToString());
             using var ms = new MemoryStream(bytes);
