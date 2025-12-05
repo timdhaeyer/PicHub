@@ -163,7 +163,7 @@ public class ProcessMediaUploadHandler : IRequestHandler<ProcessMediaUploadComma
 
     private static string GetBoundary(MediaTypeHeaderValue contentType, int lengthLimit)
     {
-        var boundary = contentType.Boundary.ToString();
+        var boundary = contentType.Boundary.Value;
         if (string.IsNullOrWhiteSpace(boundary))
         {
             throw new InvalidDataException("Missing content-type boundary.");
