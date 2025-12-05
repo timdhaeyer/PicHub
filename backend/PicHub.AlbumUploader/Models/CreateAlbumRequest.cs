@@ -7,5 +7,4 @@ public class CreateAlbumRequest
     public bool AllowUploads { get; set; } = true;
     public int? MaxFileSizeMb { get; set; }
     public string? AlbumSizeTshirt { get; set; }
-    public int? RetentionDays { get; set; }
 }
