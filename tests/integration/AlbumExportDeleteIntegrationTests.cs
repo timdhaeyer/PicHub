@@ -32,10 +32,12 @@ namespace PicHub.IntegrationTests
             await container.CreateIfNotExistsAsync();
 
             // Upload a blob that represents exported ZIP
-            var testContent = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("zip-content"));
             var blobName = $"exports/{Guid.NewGuid()}.zip";
             var blob = container.GetBlobClient(blobName);
-            await blob.UploadAsync(testContent, overwrite: true);
+            using (var testContent = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("zip-content")))
+            {
+                await blob.UploadAsync(testContent, overwrite: true);
+            }
 
             var exists = await blob.ExistsAsync();
             Assert.True(exists.Value, "Export blob should exist after upload");
