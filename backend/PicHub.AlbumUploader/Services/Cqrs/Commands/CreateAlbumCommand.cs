@@ -2,6 +2,12 @@ using MediatR;
 
 namespace PicHub.AlbumUploader.Services.Cqrs.Commands;
 
-public record CreateAlbumCommand(string Title, string? Description) : IRequest<CreateAlbumResult>;
+public record CreateAlbumCommand(
+    string Title,
+    string? Description,
+    bool AllowUploads,
+    int? MaxFileSizeMb,
+    string? AlbumSizeTshirt
+) : IRequest<CreateAlbumResult>;
 
 public record CreateAlbumResult(string PublicToken);

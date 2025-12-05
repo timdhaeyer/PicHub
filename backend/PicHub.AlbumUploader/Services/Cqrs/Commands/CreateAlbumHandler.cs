@@ -15,7 +15,10 @@ public class CreateAlbumHandler(IAlbumRepository repo) : IRequestHandler<CreateA
             Id = Guid.NewGuid(),
             Title = command.Title,
             Description = command.Description,
-            PublicToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "").Replace("+", "-").Replace("/", "_")
+            PublicToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "").Replace("+", "-").Replace("/", "_"),
+            AllowUploads = command.AllowUploads,
+            MaxFileSizeMb = command.MaxFileSizeMb,
+            AlbumSizeTshirt = command.AlbumSizeTshirt ?? "M"
         };
         _repo.InsertAlbum(album);
         return Task.FromResult(new CreateAlbumResult(album.PublicToken));
