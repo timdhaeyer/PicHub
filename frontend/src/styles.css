@@ -44,6 +44,18 @@ a:focus { outline:3px solid rgba(31,26,20,0.12); outline-offset:2px }
 	.brand-title{font-size:1rem}
 }
 
+/* Header responsive improvements */
+@media (max-width:720px){
+	.site-header-inner { padding: 0 0.5rem; }
+	.center { padding: 0 0.75rem }
+	.brand-title { display:none }
+}
+
+.mobile-menu { display:none }
+@media (max-width:720px){
+	.mobile-menu { display:block; margin-left:auto }
+}
+
 @media (prefers-reduced-motion: reduce){
 	* { transition: none !important; animation: none !important }
 }
