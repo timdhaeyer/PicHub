@@ -18,6 +18,7 @@ Phase 3: Implementation - Header
 - [ ] T007 [US1] Add responsive header CSS to `frontend/src/styles.css` to support mobile and desktop layouts
 - [x] T007 [US1] Add responsive header CSS to `frontend/src/styles.css` to support mobile and desktop layouts
 - [ ] T008 [US1] Replace hard-coded colors in `frontend/src/pages` files with CSS variables defined in `frontend/src/styles.css` (update files under `frontend/src/pages/`)
+- [x] T008 [US1] Replace hard-coded colors in `frontend/src/pages` files with CSS variables defined in `frontend/src/styles.css` (update files under `frontend/src/pages/`)
 
 Phase 4: Assets
 
