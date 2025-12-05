@@ -7,8 +7,8 @@ Phase 1: Setup
 
 Phase 2: Foundational
 
-- [ ] T003 [P] Define CSS variables in `frontend/src/styles.css` for primary (`--pichub-orange`), dark (`--pichub-dark`), background (`--pichub-bg`), and muted (`--pichub-muted`)
-- [ ] T004 [P] Add web-safe font stack and preferred font fallback in `frontend/src/styles.css`
+- [x] T003 [P] Define CSS variables in `frontend/src/styles.css` for primary (`--pichub-orange`), dark (`--pichub-dark`), background (`--pichub-bg`), and muted (`--pichub-muted`)
+- [x] T004 [P] Add web-safe font stack and preferred font fallback in `frontend/src/styles.css`
 - [ ] T005 Verify color contrast for text using the variables in `frontend/src/styles.css` and document results in `specs/002-visual-style/qa.md`
 
 Phase 3: Implementation - Header
