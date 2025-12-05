@@ -32,17 +32,31 @@ public class AlbumsFunction
         HttpRequestData req,
         string publicToken)
     {
-        var album = await _mediator.Send(new GetAlbumQuery(publicToken));
+        var publicAlbum = await _mediator.Send(new GetPublicAlbumQuery(publicToken));
 
-        if (album == null)
+        if (publicAlbum == null)
         {
             return await CreateErrorResponseAsync(req, HttpStatusCode.NotFound, "Album not found");
         }
 
         return await CreateJsonResponseAsync(req, HttpStatusCode.OK, new
         {
-            id = album.Id,
-            title = album.Title
+            id = publicAlbum.Id,
+            title = publicAlbum.Title,
+            description = publicAlbum.Description,
+            allowUploads = publicAlbum.AllowUploads,
+            maxFileSizeMb = publicAlbum.MaxFileSizeMb,
+            albumSizeTshirt = publicAlbum.AlbumSizeTshirt,
+            items = publicAlbum.Items.Select(i => new
+            {
+                id = i.Id,
+                filename = i.Filename,
+                size = i.SizeBytes,
+                contentType = i.ContentType,
+                storagePath = i.StoragePath,
+                uploadedAt = i.UploadedAt,
+                blobUri = i.BlobUri?.ToString()
+            })
         });
     }
 

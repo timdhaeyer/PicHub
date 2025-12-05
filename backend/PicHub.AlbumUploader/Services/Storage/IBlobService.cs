@@ -11,4 +11,5 @@ public interface IBlobService
     Task UploadAsync(string containerName, string blobName, Stream data, CancellationToken cancellationToken = default);
     Task DeleteIfExistsAsync(string containerName, string blobName, CancellationToken cancellationToken = default);
     Task<Uri> GetBlobUriAsync(string containerName, string blobName);
+    Task<Stream> OpenReadAsync(string containerName, string blobName, CancellationToken cancellationToken = default);
 }
