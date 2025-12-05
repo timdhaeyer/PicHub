@@ -30,15 +30,17 @@ namespace PicHub.AlbumUploader.Tests
 
             // Create payload ~2MB
             var boundary = "----BoundaryLarge";
-            var sb = new StringBuilder();
-            sb.AppendLine($"--{boundary}");
-            sb.AppendLine("Content-Disposition: form-data; name=\"file\"; filename=\"big.bin\"");
-            sb.AppendLine("Content-Type: image/png");
-            sb.AppendLine();
+            var hdr = new StringBuilder();
+            hdr.Append($"--{boundary}")
+                .Append("\r\n")
+                .Append("Content-Disposition: form-data; name=\"file\"; filename=\"big.bin\"")
+                .Append("\r\n")
+                .Append("Content-Type: image/png")
+                .Append("\r\n\r\n");
             // write 2 * 1024 * 1024 bytes
             var large = new byte[2 * 1024 * 1024];
             for (int i = 0; i < large.Length; i++) large[i] = 0x20;
-            var header = Encoding.UTF8.GetBytes(sb.ToString());
+            var header = Encoding.UTF8.GetBytes(hdr.ToString());
             var footer = Encoding.UTF8.GetBytes($"\r\n--{boundary}--\r\n");
             using var ms = new MemoryStream();
             ms.Write(header, 0, header.Length);

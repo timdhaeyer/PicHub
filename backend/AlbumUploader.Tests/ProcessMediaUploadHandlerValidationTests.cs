@@ -71,15 +71,19 @@ namespace PicHub.AlbumUploader.Tests
             var blob = new InMemoryBlobService();
 
             var boundary = "----Boundary2";
-            var content = new StringBuilder();
-            content.AppendLine($"--{boundary}");
-            content.AppendLine("Content-Disposition: form-data; name=\"file\"; filename=\"evil.exe\"");
-            content.AppendLine("Content-Type: application/x-msdownload");
-            content.AppendLine();
-            content.AppendLine("MZ...binary...");
-            content.AppendLine($"--{boundary}--");
+            var sb = new StringBuilder();
+            sb.Append($"--{boundary}")
+                .Append("\r\n")
+                .Append("Content-Disposition: form-data; name=\"file\"; filename=\"evil.exe\"")
+                .Append("\r\n")
+                .Append("Content-Type: application/x-msdownload")
+                .Append("\r\n\r\n")
+                .Append("MZ...binary...")
+                .Append("\r\n")
+                .Append($"--{boundary}--")
+                .Append("\r\n");
 
-            var bytes = Encoding.UTF8.GetBytes(content.ToString());
+            var bytes = Encoding.UTF8.GetBytes(sb.ToString());
             using var ms = new MemoryStream(bytes);
 
             var cmd = new ProcessMediaUploadCommand(album, ms, $"multipart/form-data; boundary={boundary}");

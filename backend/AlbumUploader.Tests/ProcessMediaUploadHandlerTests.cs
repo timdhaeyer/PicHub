@@ -29,17 +29,21 @@ public class ProcessMediaUploadHandlerTests
 
         var blob = new InMemoryBlobService();
 
-        // Build a simple multipart body with one file
+        // Build a simple multipart body with one file (use CRLF explicitly)
         var boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
-        var content = new StringBuilder();
-        content.AppendLine($"--{boundary}");
-        content.AppendLine("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"");
-        content.AppendLine("Content-Type: image/png");
-        content.AppendLine();
-        content.AppendLine("hello world");
-        content.AppendLine($"--{boundary}--");
+        var sb = new StringBuilder();
+        sb.Append($"--{boundary}")
+            .Append("\r\n")
+            .Append("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"")
+            .Append("\r\n")
+            .Append("Content-Type: image/png")
+            .Append("\r\n\r\n")
+            .Append("hello world")
+            .Append("\r\n")
+            .Append($"--{boundary}--")
+            .Append("\r\n");
 
-        var bytes = Encoding.UTF8.GetBytes(content.ToString());
+        var bytes = Encoding.UTF8.GetBytes(sb.ToString());
         using var ms = new MemoryStream(bytes);
 
         var cmd = new ProcessMediaUploadCommand(album, ms, $"multipart/form-data; boundary={boundary}");
